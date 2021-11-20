@@ -1,0 +1,96 @@
+{% extends 'shop/_base.html' %}
+
+{% block title %}
+{{product}}
+{% endblock title %}
+
+{% block style %}
+<style>
+    body {
+        /* background-color: white; */
+        margin: 0;
+        padding: 0;
+    }
+
+    #container {
+        max-width: 1128px;
+        margin: 25px auto;
+        display: grid;
+        grid-template-columns: 4fr 6fr;
+    }
+
+    #product-price {
+        display: flex;
+    }
+
+    #product-price p {
+        margin-top: 0;
+        font-size: 14px;
+    }
+
+    #product-price h6 {
+        color: #de2424;
+        font-size: 22px;
+        padding: 0px 9px;
+    }
+
+    #img img {
+        margin: auto;
+        width: 453px;
+        height: 563px;
+    }
+
+    #info {
+        /* border: 1px solid red; */
+        padding: 20px;
+    }
+
+    #activities {
+        width: max-content;
+        margin-left: 15px;
+    }
+    #activities button{
+        margin-left: 5px;
+    }
+
+    #wish {
+        background-color: red;
+        border-color: red;
+        /* color: black; */
+        /* border: none; */
+    }
+</style>
+{% endblock style %}
+
+{% block body %}
+<body>
+    <div id="container">
+        <div id="img">
+            <img src="/media/{{product.image}}" alt="{{product}}">
+        </div>
+        <div id="info">
+            <div id="product-name">
+                <h1><b>{{product}}</b></h1>
+            </div>
+            <div id="product-price">
+                <p> Price:</p>
+                <h6><u>Rs. {{product.price}}</u></h6>
+            </div>
+            <hr>
+            <div id="product-desc">
+                <p>&nbsp;&nbsp; {{product.desc}}</p>
+                <hr>
+            </div>
+            <div id="activities">
+                <button id="buy" class="btn btn-primary">Buy Now</button>
+                <button id="btn-{{product.id}} " class="btn btn-primary cart" >Add to Cart</button>
+                <button id="wish" class="btn btn-secondary">Add to Wishlist</button>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock body %}
+
+{% block script %}
+
+{% endblock script %}

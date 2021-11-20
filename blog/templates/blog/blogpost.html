@@ -1,0 +1,98 @@
+{% extends 'shop/_base.html' %}
+
+{% block title %}
+{{post.title}}
+{% endblock title %}
+
+{% block style %}
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    #container {
+        display: flex;
+        justify-content: space-around;
+        /* align-items: center; */
+        background-color: peachpuff;
+    }
+
+    .content {
+        padding: 1rem;
+    }
+
+    .content h1 {
+        text-align: center;
+        font-weight: 800;
+        text-decoration: underline;
+    }
+
+    .content h4 {
+        text-decoration: underline;
+        font-weight: 600;
+    }
+
+    .links {
+        border-left: 0.25rem solid white;
+        width: -webkit-fill-available;
+        /* background-color: thistle; */
+    }
+
+    #image {
+        display: flex;
+        /* align-items: center; */
+    }
+
+    #image img {
+        height: max-content;
+        width: max-content;
+    }
+
+    .fb {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid white;
+        border-radius: 3rem;
+    }
+    #liker{
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+</style>
+{% endblock style %}
+
+{% block body %}
+
+<body>
+    <div id="container">
+        <div class="content">
+            <h1>{{post.title}}</h1>
+            <div id="liker" class="fb-like" data-href="http://127.0.0.1:8000/blog/blogpost/{{post.post_id}}" data-width="" data-layout="button_count" data-action="like" data-size="small" data-share="true"></div>
+            <h4># {{post.head1}}</h4>
+            <div id="image">
+                <p>{{post.desc1}}</p>
+                <img src="/media/{{post.thumbnail}}" alt="{{post.title}}">
+            </div>
+            <h4># {{post.head2}}</h4>
+            <p>{{post.desc2}}</p>
+            <h4># {{post.head3}}</h4>
+            <p>{{post.desc3}}</p>
+            <div class="fb">
+                <div class="fb-comments" data-href="http://127.0.0.1:8000/blog/blogpost/{{post.post_id}}" data-numposts="5">
+            </div>
+            </div>
+        </div>
+        <div class="links">
+            <ul id="connect">
+                <p>Connect with us :</p>
+                <li class="connect-links"> <a href="#">GitHub</a> </li>
+                <li class="connect-links"> <a href="#">Linkeln</a> </li>
+                <li class="connect-links"> <a href="#">Twitter</a> </li>
+            </ul>
+        </div>
+    </div>
+</body>
+{% endblock body %}

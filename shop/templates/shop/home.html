@@ -1,0 +1,263 @@
+{% extends 'shop/_base.html' %}
+
+{% block title %}
+Shop best quality products online
+{% endblock title %}
+
+{% block style %}
+<style>
+  body {
+    background-color: antiquewhite;
+  }
+
+  .col-md-3 {
+    display: inline-block;
+    margin-left: -4px;
+  }
+
+  .carousel-indicators .active {
+    background-color: blue;
+  }
+
+  .col-md-3 img {
+    width: 255px;
+    height: 255px;
+  }
+
+  body .carousel-indicator li {
+    background-color: blue;
+  }
+
+  body .carousel-indicators {
+    bottom: -37px;
+  }
+
+  body .carousel-control-prev-icon,
+  body .carousel-control-next-icon {
+    background-color: blue;
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    top: auto;
+    bottom: auto;
+    padding-top: 224px;
+  }
+
+  body .no-padding {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .card {
+    background-color: transparent;
+    border: none;
+    align-items: center;
+  }
+
+  .card-text {
+    width: 260px;
+    height: 43px;
+  }
+
+  .buyer {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 10px;
+  }
+
+  #heads {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 10px;
+  }
+
+  #heads h5 {
+    display: inline-block;
+  }
+  table{
+
+  }
+  #pop-btns{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #clearcart{
+    margin-left: 5px;
+  }
+</style>
+{% endblock style %}
+
+{% block body %}
+<div class="container my-2">
+  {% for prods,range in allProds %}
+  <h1>{{prods.0.category}}</h1>
+  <div class="row">
+
+    <div id="demo{{forloop.counter}}" class="col carousel slide my-3" data-ride="carousel">
+      <!-- Bottom lights of the carousel -->
+      <ul class="carousel-indicators">
+        <!-- Default active indicator -->
+        <li data-target="#demo{{forloop.counter}}" data-slide-to="0" class="active"></li>
+        <!-- For Loop generated indicators -->
+        {% for i in range %}
+        <li data-target="#demo{{forloop.parentloop.counter}}" data-slide-to="{{i}}"></li>
+        {% endfor %}
+      </ul>
+
+      <!--Slideshow starts here -->
+      <div class="container carousel-inner no-padding">
+
+        <!-- creating a container/slide which will automatically get closed after -->
+        <!-- 4 card items & will create a similar type of container/slide -->
+        <div class="carousel-item active">
+
+          {% for i in prods %}
+          <div class="col-xs-3 col-sm-3 col-md-3">
+            <div class="card" style="width: 18rem;">
+              <img src='/media/{{i.image}}' class="card-img-top" alt="...">
+              <div class="card-body">
+                <div id="heads">
+                  <h5 class="card-title"><a href="/shop/product/{{i.id}}" id="prod_name-btn-{{i.id}}"
+                      class="card-anchor">{{i}}</a></h5>
+                  <h5 id="price-btn-{{i.id}}" style="color: red;">&#8377; {{i.price}}</h5>
+                </div>
+                <p class="card-text">{{i.desc|slice:"0:53"}}... </p>
+                <!-- {{i.id}} = returns a number (starting from 1) -->
+                <div class="buyer">
+                  <span id="qty-btn-{{i.id}}" class="quantity">
+                    <button id="btn-{{i.id}}" class="btn btn-primary cart">Add to cart</button>
+                  </span>
+                  <button id="buy-btn-{{i.id}}" class="btn btn-primary buy">Buy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
+        </div>
+        <div class="carousel-item ">
+          {% endif %}
+
+          {% endfor %}
+
+        </div>
+        <!--slide -->
+      </div>
+      <!--full container -->
+
+
+    </div>
+    <!-- left and right controls for the slide -->
+    <a class="carousel-control-prev navigators" href="#demo{{forloop.counter}}" data-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </a>
+    <a class="carousel-control-next navigators" href="#demo{{forloop.counter}}" data-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock body %}
+
+{%  block script %}
+<script>
+
+  // CART SETTINGS
+  // check if cart(a dict) is already present
+  if (localStorage.getItem('cart') == null) {
+    var cart = {};
+    console.log("new cart created");
+  } else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    updateCart(cart);
+    console.log("existing cart used")
+  }
+
+  // selector of jquery : selecting the cart items
+  $('.quantity').on('click', 'button.cart', function add_to_cart() {
+    var key = this.id.toString();
+    console.log("Clicked Cart : " + key);
+    // check if entry of this .cart item is not made
+    if (cart[key] == undefined) {
+      // creating a new cart item if not available
+      qty = 1;
+      name = document.getElementById('prod_name-' + key).innerHTML;
+      price = document.getElementById('price-' + key).innerHTML;
+      cart[key] = [name, qty, parseInt(price.slice(2,))];
+    }
+    // Add to Cart ---> |+| 7 |-|
+    document.getElementById('qty-' + key).innerHTML = "<button class='btn btn-primary add' id='add-" + key + "' > +</button >    <span class='btn btn-primary total' id='total-" + key + "'>" + cart[key][1] + "</span>   <button class='btn btn-primary remove' id='remove-" + key + "'>-</button>"
+    updateCart(cart);
+  })
+
+  // to display add/remove btns in place of Add to Cart
+  function updateCart(cart) {
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updatePopover(cart);
+  }
+
+  // if clicked on Add :
+  $('.quantity').on("click", 'button.add', function adder() {
+    var key = this.id.slice(4,);
+    cart[key][1] = cart[key][1] + 1;
+    document.getElementById('total-' + key).innerHTML = cart[key][1]
+    updateCart(cart);
+  })
+
+  // if clicked on Remove :
+  $('.quantity').on("click", ".remove", function remover() {
+    var key = this.id.slice(7,);
+    cart[key][1] = Math.max(cart[key][1] - 1, 0);
+    document.getElementById('total-' + key).innerHTML = cart[key][1]
+    updateCart(cart);
+  })
+
+  function updatePopover(cart) {
+    let popper = "";
+    console.log("Object.keys(cart).length : " + Object.keys(cart).length)
+    console.log("keys : " + Object.keys(cart).length)
+    popper = '<table style="text-align:center; margin:auto"> <tr> <td>No.</td> <td>Product</td> <td>Qty.</td> </tr> ';
+    let i = 0;
+    let sum = 0;
+    for (var item in cart) {
+      if (cart[item][1] == 0) {
+        delete cart[item];
+      } else {
+        popper = popper + "<tr >" + "<td>" + ++i + "." + "</td> <td style='text-align:left'>" + "<a style='color:black' href='/shop/product/" + item.slice(4,) + "'>" + cart[item][0] + "</a>" + "</td> <td>" + cart[item][1] + "</td>" + "</tr>"
+        // to get total quantity of all the items in cart
+        sum = sum + cart[item][1];
+      }
+    }
+    popper = popper + "</table> <div id='pop-btns'> <a href='/shop/checkout/'><button id='checkout' class='btn btn-primary'> Buy all </button></a><a > <button id='clearcart' class='btn btn-primary' onclick='clearCart()'>Clearcart</button></a> </div>"
+    if (i == 0) {
+      popper = "Cart is Empty";
+    }
+    document.getElementById('cart-span').innerHTML = '(' + i + ')';
+    document.getElementById('popcart').setAttribute('data-content', popper);
+    // to display changes in the popover banner
+    $('#popcart').popover("show")
+  }
+
+  function clearCart() {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    console.log('cart before empty : ' + cart);
+    for (var item in cart) {
+      console.log('item : ' + item);
+      document.getElementById('qty-' + item).innerHTML = '<button id="' + item + '" class="btn btn-primary cart">Add to cart</button>';
+    }
+    localStorage.clear();
+    // very imp bcoz after localStorage.clear() a reload is required to apply changes
+    // but since we dont want a reload we must initialize the cart as empty
+    cart = {};
+    console.log('cart is empty : ' + cart);
+    console.log("local storage cleared");
+    console.log(Object.keys(cart).length)
+    updateCart(cart);
+  }
+
+
+</script>
+{% endblock script %}

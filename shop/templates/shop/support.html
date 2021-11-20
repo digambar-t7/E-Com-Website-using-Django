@@ -1,0 +1,126 @@
+{% extends 'shop/_base.html' %}
+
+
+{% block title %}
+Support
+{% endblock title %}
+
+{% block style %}
+<style>
+    .navbar a{
+        color: red;
+    }
+
+    .navbar{
+        color: black;
+    }
+
+    #contact-body {
+        background-color: brown;
+    }
+
+    section {
+        /* padding: 100px auto; */
+    }
+
+    #container {
+        width: 1128px;
+        height: 77vh;
+        margin: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    form {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        flex-direction: column;
+        height: inherit;
+    }
+
+    form h1{
+        font-weight: 800;
+    }
+
+    form>div>label>input {
+        margin: 0px;
+        width: max-content;
+        height: 44px;
+        border: none;
+        text-align: center;
+        border-bottom: 3px solid;
+        background-color: transparent;
+        margin-right: 20px;
+    }
+
+    textarea {
+        margin: 0px;
+        height: 100px;
+        width: 622px;
+        border: none;
+        border-bottom: 3px solid;
+        background-color: inherit;
+        text-align: center;
+    }
+    ::placeholder{
+        color: rgba(0, 0, 0, 0.5);
+    }
+
+    #submit {
+        cursor: pointer;
+        padding: 5px 24px;
+        background-color: transparent;
+        border: 3px solid;
+        border-radius: 34px;
+        font-size: 25px;
+        font-weight: 600;
+    }
+
+    #submit:hover {
+        background: black;
+        color: white;
+        border-color: black;
+    }
+</style>
+{% endblock style %}
+
+{% block body %}
+<body id="contact-body">
+    <section>
+        <div id="container">
+            <form action="/shop/support/" method="POST" id="support_form">
+                {% csrf_token %}
+                <h1> <u>Reach us out!</u></h1>
+                <div>
+                    <label for="name">
+                        <input type="text" name="name" id="name" placeholder="Enter your name">
+                    </label>
+                    <label for="email">
+                        <input type="email" name="email" id="email" placeholder="Enter your Email id">
+                    </label>
+                    <label for="phone">
+                        <input type="tel" name="phone" id="phone" placeholder="Enter your Contact number">
+                    </label>
+                </div>
+                <div>
+                    <label for="desc">
+                        <textarea name="desc" id="desc" cols="30" rows="10"
+                            placeholder="Give us your valuable feedback"></textarea>
+                    </label>
+                </div>
+                <button id="submit" type="submit">Submit</button>
+            </form>
+        </div>
+    </section>
+</body>
+{% endblock body %}
+
+{% block script %}
+<script>
+    $('#support_form').submit(function (event) {
+        alert("SUCCESS!!!We recieved you feedback.")
+    })
+</script>
+{% endblock script %}

@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+  <title>Re Home |{% block title %}{% endblock title %} </title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      /* height: 100vh; */
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: black;
+    }
+
+    .nav-item:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <style>
+    body{
+      background-color: cyan;
+    }
+    .col-md-3 {
+      display: inline-block;
+      margin-left: -4px;
+    }
+  
+    .carousel-indicators .active {
+      background-color: blue;
+    }
+  
+    .col-md-3 img {
+      width: 255px;
+      height: 255px;
+    }
+  
+    body .carousel-indicator li {
+      background-color: blue;
+    }
+  
+    body .carousel-indicators {
+      bottom: 0;
+    }
+    .carousel-inner{
+      /* border: 2px solid black;
+      border-radius: 5px; */
+    }
+  
+    body .carousel-control-prev-icon,
+    body .carousel-control-next-icon {
+      background-color: blue;
+    }
+  
+    .carousel-control-prev,
+    .carousel-control-next {
+      top: auto;
+      bottom: auto;
+      padding-top: 224px;
+    }
+  
+    body .no-padding {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  
+    .card{
+      background-color: transparent;
+      border: none;
+      align-items: center;
+    }
+  
+    .card-text {
+      width: 260px;
+      height: 43px;
+    }
+  
+  </style>
+</head>
+
+<body>
+  <!-- {% load static %} -->
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-black">
+    <a class="navbar-brand" style=" font-weight: 800; font-size: 2rem;" href="/shop">SuperLala</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item ">
+          <a class="nav-link" style="color: white; font-weight: 800; font-size: 1.2rem;" href="/shop">Home <span
+              class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="color: white; font-weight: 800; font-size: 1.2rem;" href="/shop/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="color: white; font-weight: 800; font-size: 1.2rem;"
+            href="/shop/tracker">Tracker</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="color: white; font-weight: 800; font-size: 1.2rem;"
+            href="/shop/support">Support</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+      <button type="button" id="popcart" class="btn btn-secondary btn-danger mx-2" data-html="true"
+        data-placement="bottom" data-toggle="popover"
+        data-content="Kabhi kabhi lagta hain ki sala apunich bhagwaan hain">MyCart <span id="cart-span"></span>
+      </button>
+    </div>
+  </nav>
+
+
+  <div class="container my-2">
+  {% for prods,range in allProds %}
+  <h1>{{prods.0.category}}</h1>
+  <div class="row">
+
+    <div id="demo{{forloop.counter}}" class="col carousel slide my-3" data-ride="carousel">
+      <!-- Bottom lights of the carousel -->
+      <ul class="carousel-indicators">
+        <!-- Default active indicator -->
+        <li data-target="#demo{{forloop.counter}}" data-slide-to="0" class="active"></li>
+        <!-- For Loop generated indicators -->
+        {% for i in range %}
+        <li data-target="#demo{{forloop.parentloop.counter}}" data-slide-to="{{i}}"></li>
+        {% endfor %}
+      </ul>
+
+      <!--Slideshow starts here -->
+      <div class="container carousel-inner no-padding">
+
+        <!-- creating a container/slide which will automatically get closed after -->
+        <!-- 4 card items & will create a similar type of container/slide -->
+        <div class="carousel-item active">
+
+          {% for i in prods %}
+          <div class="col-xs-3 col-sm-3 col-md-3">
+            <div class="card" style="width: 18rem;">
+              <img src='/media/{{i.image}}' class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title"><a href="/shop/product/{{i.id}}" class="card-anchor">{{i}}</a></h5>
+                <p class="card-text">{{i.desc|slice:"0:53"}}... </p>
+                <!-- {{i.id}} = returns a number (starting from 1) -->
+                <!-- <div id="qty-btn-{{i.id}}"><button id="btn-{{i.id}} " class="btn btn-primary cart">Add to cart</button></div> -->
+                <div id="qty-btn-{{i.id}}"><button id="btn-{{i.id}}" class="btn btn-primary cart">Cart</button></div>
+              </div>
+            </div>
+          </div>
+
+          {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
+        </div>
+        <div class="carousel-item ">
+          {% endif %}
+
+          {% endfor %}
+        
+        </div>
+        <!--slide -->
+      </div>
+      <!--full container -->
+
+
+    </div>
+    <!-- left and right controls for the slide -->
+    <a class="carousel-control-prev navigators" href="#demo{{forloop.counter}}" data-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </a>
+    <a class="carousel-control-next navigators" href="#demo{{forloop.counter}}" data-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+</body>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+  integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+  integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+  <script>
+    // CART SETTINGS
+    // check if cart(a dict) is already present
+    if (localStorage.getItem('cart') == null) {
+      var cart = {};
+    } else {
+      // cart = localStorage.getItem("cart");
+      cart = JSON.parse(localStorage.getItem('cart'));
+      document.getElementById('cart-span').innerHTML = '(' + Object.keys(cart).length + ')'
+    }
+  
+    // selector of jquery : selecting the cart items
+    $('.cart').click(function add_to_cart() {
+      // registering current .cart obj's id
+      var idstr = this.id.toString();
+      console.log(idstr);
+      console.log("qty-"+idstr);
+      // check if entry of this .cart item is already made
+      if (cart[idstr] != undefined) {
+        // incrementing the count value for already stored .cart items
+        cart[idstr] = cart[idstr] + 1;
+      }
+      else {
+        // creating a new cart item if not available
+        cart[idstr] = 1;
+      }
+      console.log(cart);
+      // setting .cart item in localStorage so that it wont disappear when needed the next time
+      localStorage.setItem('cart', JSON.stringify(cart));
+      document.getElementById('cart-span').innerHTML = '(' + Object.keys(cart).length + ')'
+      document.getElementById('qty-'+ idstr).innerHTML = '<button>hey</button>'
+    })
+  
+    // Pop-Over related configurations 
+    // to initialize the popover-pass no arg ( to make popover active: arg='show' )
+    $('#popcart').popover()
+  
+    // setting data in the banner
+    document.getElementById('popcart').setAttribute('data-content', '<h5>Cart</h5>')
+    // document.getElementById('popcart').setAttribute('title','<h5>Cart</h5>')
+    
+    </script>
+    {% block script %} {% endblock script %}
+</html>

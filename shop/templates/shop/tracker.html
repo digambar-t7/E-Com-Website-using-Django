@@ -1,0 +1,127 @@
+{% extends 'shop/_base.html' %}
+
+{% block title %}
+Track your orders very conveniently
+{% endblock title %}
+
+{% block style %}
+<style>
+    body {
+        background-color: darkorange;
+    }
+
+    .container h1 {
+        text-align: center;
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: white;
+    }
+
+    .container form {
+        /* border-top: 1px solid white; */
+        padding-top: 20px;
+    }
+
+    .container .form-control {
+        background: transparent;
+        border: 2px solid white;
+    }
+
+    .container .form-label {
+        color: white;
+        font-size: 1.6rem;
+    }
+</style>
+{% endblock style %}
+
+{% block body %}
+
+<body>
+    <div class="container">
+        <div class="col my-2">
+            <h1>Enter your details to track your order.</h1>
+            <form class="row g-3" action="#" id="tracker" method="POST">
+                {% csrf_token %}
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email ID</label>
+                    <input type="email" class="form-control" id="email" name="email">
+                </div>
+                <div class="col-md-6">
+                    <label for="order_id" class="form-label">Order ID</label>
+                    <input type="tel" class="form-control" id="order_id" name="order_id">
+                </div>
+                <div class="col-12 my-2">
+                    <button type="submit" id="submit" class="btn btn-primary">Track Order</button>
+                </div>
+            </form>
+        </div>
+        <div id="items" class="col my-2">
+        </div>
+        <div id="details" class="col my-2">
+        </div>
+    </div>
+</body>
+{% endblock body %}
+
+{% block script %}
+<script>
+    // this will happen once the form is submitted
+    $('#tracker').submit(function (event) {
+        event.preventDefault()
+        $('#items').empty();
+        $('#details').empty();
+        // creating json of details entered to send it to server
+        var formData = {
+            'email': $('input[name=email]').val(),
+            'order_id': $('input[name=order_id]').val(),
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        };
+        // using ajax request to send it to the server to avoid page reloading
+        // mention all parameters to be sent
+        $.ajax({
+            type: 'POST',
+            url: '/shop/tracker/',
+            data: formData,
+            encode: true
+        })
+            .done(function (data) {
+                if (data != {} & data.length > 0) {
+                    data = JSON.parse(data);
+                    update = data[0];
+                    console.log(update)
+                    let mystr = `<h1>Your recent updates</h1>`
+                    for (let i = 0; i < update.length; i++) {
+                        let msg = update[i]['update'];
+                        let time = update[i]['time'];
+                        console.log("msg : " + msg + " time : " + time)
+                        mystr = mystr + `<li class="list-group-item d-flex justify-content-between  align-items-center">
+                        <span>${msg}</span>
+                        <span class="badge bg-primary rounded-pill" style="color:white">${time}</span>
+                    </li>`
+                    }
+                    $('#items').append(mystr);
+
+                    // filling the order details
+                    let detail = `<h1>Your Order Details</h1>`
+                    cart = JSON.parse(data[1]);
+                    for (var item in cart) {
+                        let name = cart[item][0];
+                        let qty = cart[item][1];
+                        detail = detail + `<li class="list-group-item d-flex justify-content-between  align-items-center">
+                        <span>${name}</span>
+                        <span class="badge bg-primary rounded-pill" style="color:white">${qty}</span>
+                    </li>`
+                    }
+                    $('#details').append(detail);
+                } else {
+                    mystr = `<li class="list-group-item d-flex justify-content-center  align-items-center" style="text-align:center;">
+                        We could not find your order<br>Please retry again using correct details
+                    </li>`
+                    $("#items").append(mystr);
+                }
+            })
+    });
+
+
+</script>
+{% endblock script %}
